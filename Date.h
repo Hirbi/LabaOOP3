@@ -7,11 +7,8 @@ using namespace std;
 
 
 class Date {
-	// friend bool operator>(const Storage& left, const Date& right);
+
 	friend class Storage;
-	friend void close_db(vector <Storage>&, string);
-	friend void table_output(vector <Storage>&);
-	// friend vector <Storage> open_db(string);
 	int day;
 	int month;
 	int year;
@@ -22,6 +19,7 @@ public:
 		this->month = month;
 		this->year = year;
 	}
+
 	// перегрузка оператора присваивания
 	Date& operator= (const Date& right) {
 		day = right.day;
@@ -29,13 +27,36 @@ public:
 		year = right.year;
 		return *this;
 	}
+	// перегрузка оператора >>
+	friend istream& operator>> (istream& is, Date& right) {
+		is >> right.day;
+		is >> right.month;
+		is >> right.year;
+		return is;
+	}
+
+	// перегрузка оператора <<
 	friend ostream& operator<< (ostream& os, const Date& right) {
 		return os << right.day << " " << right.month << " " << right.year;
 	}
+
+	// перегрузка оператора сравнения
+	friend int operator>(const Date& left, const Date& right) {
+		if (left.year > right.year)
+			return true;
+		else if (left.year == right.year)
+			if (left.month > right.month)
+				return true;
+			else if (left.month == right.month && left.day > right.day)
+				return true;
+		return false;
+	}
+
 	// форматированный вывод
 	void date_output() {
-		printf("%#02d:%#02d:%#02d\n", day, month, year);
+		printf("%#02d:%#02d:%#02d", day, month, year);
 	}
+	// ввести информацию с консоли
 	void set_info() {
 		cout << "Введите день: ";
 		cin >> day;
